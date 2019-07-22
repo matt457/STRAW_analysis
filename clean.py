@@ -11,7 +11,7 @@ from matplotlib.colors import LogNorm
 class clean(object):
     def __init__(self, file_name): #__init__ requires file name
         self.file_name = file_name
-        self.file_path = 'Data/POSEIDON1/' #change self.file_path to a suitable one
+        self.file_path = 'Data/MINOS1/uv/' #'Data/MINOS1/violet/' #change self.file_path to a suitable one
         l = open_file(self.file_path + self.file_name) #reads the contents in the file
         list(l)
     
@@ -66,7 +66,7 @@ class clean(object):
         if LED == ['P1_o']:
         	LED = 'orange'
         if LED == ['P1_u']:
-        	LED == 'uv'
+        	LED = 'uv'
         
     #Finding the color of LED used in POCAM1
         if LED == ['P2_b']:
@@ -76,7 +76,7 @@ class clean(object):
         if LED == ['P2_o']:
         	LED = 'orange'
         if LED == ['P2_u']:
-        	LED == 'uv'
+        	LED = 'uv'
         
     #graph_title stores the important information from the file name as a list
         graph_title = [self.POCAM_num, self.SDOM_num, self.PMT, LED, voltage, self.frequency]
@@ -84,12 +84,12 @@ class clean(object):
         values = ','.join(str(v) for v in graph_title)
          
     #timestamp graph
-        plt.figure(figsize=(10,9))
-        plt.title(values, fontsize = 22)
-        plt.ylabel('absolute_timestamps(ns)', fontsize = 19)
-        plt.xlabel('index', fontsize = 19)
-        plt.plot(self.atstamp, '.')
-        plt.savefig(self.file_path + '/graphs/' + values + 'high_jumps.jpeg', dpi = 200)
+        #plt.figure(figsize=(10,9))
+        #plt.title(values, fontsize = 22)
+        #plt.ylabel('absolute_timestamps(ns)', fontsize = 19)
+        #plt.xlabel('index', fontsize = 19)
+        #plt.plot(self.atstamp, '.')
+        #plt.savefig(self.file_path + '/graphs/' + values + 'high_jumps.jpeg', dpi = 200)
     
     #cleaning large jumps
         elim_h_jumps = (self.atstamp < 1e11) & (self.atstamp > -1e7) #boolean for eliminating both negative and positive jumps

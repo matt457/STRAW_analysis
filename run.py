@@ -14,7 +14,8 @@ class run(object):
 #1)absolute_timestamp after initial 150 indices are removed
 #2)percentage of high jumps
 #3)mean of timestamp difference obtained in 'clean' module 
-    def run_time(self, abs_timestamp, jumps, dt_mean):
+#4-7) time over threshold after initial 150 indices are removed, given by ToT_i = falling_i - rising_i
+    def run_time(self, abs_timestamp, jumps, dt_mean, ToT_0, ToT_1, ToT_2, ToT_3):
     #removing negative timestamps
         negative_index_values = [] #stores indices of negative timestamps
         for r in range(0, abs_timestamp.size):
@@ -28,11 +29,13 @@ class run(object):
         else:
             r_negative_stamp = abs_timestamp[:]
 			
-        store_index = [] #stores indices of r_negative_timestamp where the jumps have occured
+        store_index = [] #stores indices of r_negative_timestamp where the jumps or faulty falling/rising times have occured
         for index, value in enumerate(r_negative_stamp):
             if r_negative_stamp[index] <= -1e7 or r_negative_stamp[index] >= 1e11:
                 store_index.append(index)
                 #print(index, value)
+            elif (ToT_0[index] < 0) or (ToT_1[index] < 0) or (ToT_2[index] < 0) or (ToT_3[index] < 0):
+                store_index.append(index)
 				
         #high jumps
         store_sum = ([])
@@ -48,23 +51,25 @@ class run(object):
                 if values == 0 and store_index[values] != 0:
                     time_diff = r_negative_stamp[store_index[values]-1] - r_negative_stamp[0]
                     time = np.append(time, time_diff)
-                    print(store_index[values]-1)
-                    print()
+                    #print(store_index[values]-1)
+                    #print()
                     
                 if values == len(store_index) - 1:
+                    #print('continue')
+                    #continue
                     time_diff = r_negative_stamp[r_negative_stamp.size - 1] - r_negative_stamp[store_index[values]+1]
                     time = np.append(time, time_diff)
-                    print(store_index[values]+1)
+                    #print(store_index[values]+1)
                 else:
                     if store_index[values+1] - store_index[values]!= 1:
                         Ncuts_h.append(values+1)
                         time_diff = r_negative_stamp[store_index[values+1]-1] - r_negative_stamp[store_index[values]+1]
                         time = np.append(time, time_diff)
-                        print(store_index[values+1]-1, store_index[values]+1)
-            print(time[0:1000])
-            print(r_negative_stamp[store_index[0]-1] - r_negative_stamp[0])
-            print(r_negative_stamp[r_negative_stamp.size-1] - r_negative_stamp[store_index[len(store_index) - 1]+1])
-            print(store_index[0]-1)
+                        #print(store_index[values+1]-1, store_index[values]+1)
+            #print(time[0:1000])
+            #print(r_negative_stamp[store_index[0]-1] - r_negative_stamp[0])
+            #print(r_negative_stamp[r_negative_stamp.size-1] - r_negative_stamp[store_index[len(store_index) - 1]+1])
+            #print(store_index[0]-1)
             Ncuts_h_size = len(Ncuts_h) #the number of cuts ie how many sets of huge jumps were removed
             
             sum_1 = time.sum() #summing all the time difference gives the run time without considering the high jumps
@@ -121,7 +126,7 @@ class run(object):
         if len(list_1) == 0:
             run_time = sum_1
             Ncuts = Ncuts_h_size
-            error_rtime = (2 * Ncuts * dt_mean) * 1e-9
+            error_rtime = (Ncuts * dt_mean) * 1e-9
         
         else:
             list_int = list_1.astype(int) #converting list_1 into an integer
@@ -134,11 +139,11 @@ class run(object):
                 else:
                     if list_1[values_s+1] - list_1[values_s]!= 1:
                         Ncuts_s.append(values_s)
-            print(len(Ncuts_s))
+            #print(len(Ncuts_s))
     
             Ncuts = Ncuts_h_size + len(Ncuts_s)
-            print(Ncuts)
-            error_rtime = (2 * Ncuts * dt_mean) * 1e-9
+            #print(Ncuts)
+            error_rtime = (Ncuts * dt_mean) * 1e-9
         
         #Calculating the time difference between the timestamp before the first set of small jumps and timestamp after the same set of small jumps
             # small jumps
@@ -148,25 +153,25 @@ class run(object):
                 if k == 0 and list_int[k] != 0:
                     po = r_high_jumps[list_int[k]-1]
                     store_sum_1.append(po)
-                    print(k,list_int[k], po, 'p')
+                    #print(k,list_int[k], po, 'p')
                     if list_int[k] != list_int[k+1] - 1:
                         po = r_high_jumps[list_int[k+1]-1] 
                         qo = r_high_jumps[list_int[k] + 1]
-                        print(k, list_int[k], po, 'p')
-                        print(k, list_int[k], qo, 'q')
+                        #print(k, list_int[k], po, 'p')
+                        #print(k, list_int[k], qo, 'q')
                         store_sum_1.append(po)
                         store_sum_2 = np.append(store_sum_2, qo)
                 elif k == len(list_int) - 1:
                     qo = r_high_jumps[list_int[k]+1]
                     store_sum_2 = np.append(store_sum_2, qo)
-                    print(k,list_int[k],qo, 'q')
+                    #print(k,list_int[k],qo, 'q')
                 elif list_int[k+1] == list_int[k]+1:
                     continue
                 elif list_int[k] != list_int[k+1] - 1:
                     po = r_high_jumps[list_int[k+1]-1]
                     qo = r_high_jumps[list_int[k] + 1]
-                    print(k, list_int[k], po, 'p')
-                    print(k, list_int[k], qo, 'q')
+                    #print(k, list_int[k], po, 'p')
+                    #print(k, list_int[k], qo, 'q')
                     store_sum_1.append(po)
                     store_sum_2 = np.append(store_sum_2, qo)
                 #print(k, p)
@@ -179,15 +184,20 @@ class run(object):
             run_time = sum_1 - sum_2 #subtracting the dead time caused by small jumps from the run time calculated without considering the high jumps
             print('time removed(small jumps) - ', sum_2)
      
-        print('timestamp of the last event - ', abs_timestamp[abs_timestamp.size - 1])
+        total_time = abs_timestamp[abs_timestamp.size - 1]
+        dead_time_uncert = error_rtime/total_time * 1e9 * 100
+
+        print('timestamp of the last event - ', total_time)
         print('eliminating high jumps and summing - ', sum_1)
         print('run time - ', run_time)
     
         self.run_time = run_time * 1e-9 #converting run time from nanoseconds to seconds 
-        return self.run_time, error_rtime
+
+        return self.run_time, error_rtime, dead_time_uncert
     #returs
     #1)run time in seconds 
     #2)error on runtime 
+    #3)dead time uncertainty
     
 #angl_dist requires
 #1)POCAM used that is returned in module 'clean'
