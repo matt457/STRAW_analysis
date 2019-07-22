@@ -4,9 +4,9 @@ Analysis of simulations and measurements taken from STRings for Absorption lengt
 It is planned for a neutrino telescope, P-ONE, to be deployed at the site, so characterization of the optical properties of the water is critical.
 
 # File description
-clean.py, residual.py, and run.py were written by Akanksha, updated by me. Respectively, the classes have methods that clean the data, plot the residuals, and apply corrections to the overall run. 
+clean.py, residual.py, and run.py were written by Akanksha, updated by me. Respectively, the classes have methods that clean the data, plot the photon arrival time residuals, and apply corrections to the overall run. 
 
-P2, Violet, 20V, 2500Hz.ipynb is a notebook to run clean.py and residual.py on the data
+P2 Violet.ipynb is a notebook to run clean.py and residual.py on the data
 
 Photon MC simulation.ipynb contains the simulations, as well as analysis and comparison to measurements
 
