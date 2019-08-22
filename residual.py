@@ -58,7 +58,7 @@ class residual(object):
         self.file_path = file_path
         self.weights = weights
         self.ToT = time_over_threshold
-        self.save_path = 'Data/MINOS1/uv/Measured_arrival_times/'
+        self.save_path = 'Data/POSEIDON1/violet/Measured_arrival_times/'
 
 # TimeOverThreshold accounts for multi-photon events by assigning weights to each event
 # requires corresponding rising and falling edges after cleaning

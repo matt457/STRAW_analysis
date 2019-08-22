@@ -11,7 +11,7 @@ from matplotlib.colors import LogNorm
 class clean(object):
     def __init__(self, file_name): #__init__ requires file name
         self.file_name = file_name
-        self.file_path = 'Data/MINOS1/uv/' #'Data/MINOS1/violet/' #change self.file_path to a suitable one
+        self.file_path = 'Data/POSEIDON1/violet/' #'Data/MINOS1/violet/' #change self.file_path to a suitable one
         l = open_file(self.file_path + self.file_name) #reads the contents in the file
         list(l)
     
